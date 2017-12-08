@@ -2,30 +2,28 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 
-public class root extends Frame {
-	int x, y, t, c = 0, num;
+public class Root extends Frame {
+	int x, y, crr = 0;
+	int[] bs = new int[4], bf =new int[4];
 	int sum = 0,chnum;
-	ArrayList<Integer> bx = new ArrayList<Integer>();
-	ArrayList<Integer> by = new ArrayList<Integer>();
+	ArrayList<Integer> coordx = new ArrayList<Integer>();
+	ArrayList<Integer> coordy = new ArrayList<Integer>();
 	int[][] record = new int[17][17];
-	boolean IschkFoul, cheat, win;
-	boolean[] Ischeat = {false,false,false};
-	boolean[] Warncheat = {false,false};
+	boolean isBlack, isCheat, win;
+	boolean[] isCheatset = {false,false,false};
+	boolean[] isFirstcheatset = {false,false};
 	static int[][] flag = new int[2][4];
 	static final double DEG = 45.0;
 
 	public static void main(String[] args) {
-		root panel = new root();
+		Root panel = new Root();
     panel.setVisible(true);
 		panel.setBackground(new Color(250,150,50));
-
 	}
 
-	public root(){
+	public Root(){
 		super();
 		for(int k = 0;k < flag[0].length; k++) {
 			flag[0][k] = (int)(1.8 * Math.cos(Math.toRadians(DEG * k)));
@@ -36,7 +34,7 @@ public class root extends Frame {
 			record[16][i] = -1;
 		}
 		makenewgame();
-		setTitle("aaa");
+		setTitle("GOMOKU_NARABE");
 		setBackground(new Color(250,150,50));
 		addMouseListener(new MAdapter());
 		addWindowListener(new WListener());
@@ -52,23 +50,20 @@ public class root extends Frame {
 				record[i][j] = 0;
 			}
 		}
-		bx.clear();
-		by.clear();
-		c = 0;
+		coordx.clear();
+		coordy.clear();
+		crr = 0;
 	}
 
-	public void dot(Graphics g, int x, int y) {
-		g.setColor(Color.BLACK);
-		g.fillOval(x-3, y-3, 6, 6);
-	}
-	public void MakeBoard(Graphics g) {
+	public void makeBoard(Graphics g) {
 		final int CENTER = 270, T = 120;
+		final int ISHI_SIZE = 30;
 		g.setColor(Color.BLACK);
-		dot(g, CENTER-T, CENTER-T);
-		dot(g, CENTER-T, CENTER+T);
-		dot(g, CENTER+T, CENTER-T);
-		dot(g, CENTER+T, CENTER+T);
-		dot(g, CENTER, CENTER);
+		g.fillOval(CENTER - 3*ISHI_SIZE -3, CENTER - 3*ISHI_SIZE -3, 6, 6);
+		g.fillOval(CENTER - 3*ISHI_SIZE -3, CENTER + 3*ISHI_SIZE -3, 6, 6);
+		g.fillOval(CENTER + 3*ISHI_SIZE -3, CENTER - 3*ISHI_SIZE -3, 6, 6);
+		g.fillOval(CENTER + 3*ISHI_SIZE -3, CENTER + 3*ISHI_SIZE -3, 6, 6);
+		g.fillOval(CENTER -3, CENTER -3, 6, 6);
 		for (int lcnt = 60; lcnt <= 480; lcnt += 30) {
 			g.drawLine(60, lcnt, 480, lcnt);
 			g.drawLine(lcnt, 60, lcnt, 480);
@@ -96,62 +91,66 @@ public class root extends Frame {
 		}
 
 		public void mousePressed(MouseEvent e){
-			int[] Reachset= new int[4];
-			if(cheat || win) {
+			int[][] Reachset= new int[flag[0].length][11];
+			if(isCheat || win) {
 				makenewgame();
-				cheat = false;
+				isCheat = false;
 				win = false;
-				for(int i = 0; i < 3; i++) Ischeat[i] = false;
+				for(int i = 0; i < 3; i++) isCheatset[i] = false;
 				System.out.println("\nNEW GAME.\n");
 			}
 
 			check(e);
-			IschkFoul = (c%2==0);
-			String player = (IschkFoul) ? "BLACK" : "WHITE";
-			record[x][y] = (IschkFoul) ? 1 : 2;
+			isBlack = (crr%2==0);
+			System.out.println("crr :" + crr);
+			String player = (isBlack) ? "BLACK" : "WHITE";
+			record[x][y] = (isBlack) ? 2 : 1;
 			record[0][0] = -1;
-			Reachset = IsReach(record);
-			cheat = Ischeat(Reachset, IschkFoul);
-			win = Iswin(Reachset);
-			if(cheat) System.out.println("CHEAT!\nWIN: WHITE");
-			else if(win) {
-				System.out.println("WIN: " + player);
-			}
-			for(int i = 0; i < 17 ; i++) {
-				for (int j = 0; j < 17; j++){
-					System.out.print(record[j][i]);
+			Reachset = makereachset(record);
+			for(int k = 0; k < flag[0].length; k++) {
+				int Rnum = isReach(Reachset[k], k);
+				if(x == 0) break;
+				System.out.println("Rnum : "+Rnum);
+				isCheat = ischeat(Rnum, isBlack);
+				if(isCheat) {
+					System.out.println("CHEAT!\nWIN: WHITE");
+					break;
 				}
+				if(!isCheat && !win) {
+					win = Iswin(Rnum);
+				}
+			}
+			if(!isCheat && win) System.out.println("WIN: " + player);
+			for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
+			for(int i = 0; i < 17 ; i++) {
+				for (int j = 0; j < 17; j++) System.out.print(record[j][i]);
 				System.out.print("\n");
 			}
 
 		}
 
-		public boolean Ischeat(int[] Rset, boolean Icf) {
+		public boolean ischeat(int r, boolean Icf) {
 			int t;
 			if(Icf){
-				for(int i = 0; i < 4; i++) {
-					if(Rset[i] == 3 || Rset[i] == 4) {
-						t = (Rset[i] == 3) ? 0 : 1;
-						if(Warncheat[t]) {
-							Ischeat[t] = true;
-							return true;
-						}
-						else Warncheat[t] = true;
-					}
-					else if(Rset[i] >= 6) {
-						Ischeat[2] = true;
+				if(r == 3 || r == 4) {
+					t = (r == 3) ? 0 : 1;
+					if(isFirstcheatset[t]) {
+						isCheatset[t] = true;
+						for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
 						return true;
 					}
+					else isFirstcheatset[t] = true;
 				}
-				for(int i = 0; i < 2; i++) Warncheat[i] = false;
+				else if(r >= 6) {
+					isCheatset[2] = true;
+					return true;
+				}
 			}
 			return false;
 		}
 
-		public boolean Iswin(int[] Rset) {
-			for(int i = 0; i < 4; i++) {
-				if(Rset[i] >= 5) return true;
-			}
+		public boolean Iswin(int r) {
+			if(r >= 5) return true;
 			return false;
 		}
 
@@ -163,42 +162,44 @@ public class root extends Frame {
 	public void check(MouseEvent e){
 		x = (e.getX()-15)/30;
 		y = (e.getY()-15)/30;
-		if (c==0) {
+		if (crr==0) {
 			x = 8; y = 8;
 		}
 		else if(x > 0 && x < 16 && y > 0 && y < 16) {
-			if (record[x][y] > 0) Insert();
-			else if (c==1 && (x < 7 || x > 9 || y < 7 || y > 9 )) Insert();
+			if (record[x][y] > 0) {
+ 				x = 0; y = 0;
+			}
+			else if (crr==1 && (x < 7 || x > 9 || y < 7 || y > 9 ))  {
+				x = 0; y = 0;
+			}
 		}
-		else Insert();
+		else {
+ 			x = 0; y = 0;
+		}
 		if(x != 0) {
 			repaint();
-			bx.add(x * 30);
-			by.add(y * 30);
-			c++;
+			coordx.add(x * 30);
+			coordy.add(y * 30);
+			crr++;
 		}
-	}
-	void Insert() {
-		x = 0; y = 0;
 	}
 
 	public void paint(Graphics g) {
-		MakeBoard(g);
-		for (num = 0; num <bx.size(); num++) {
-				IschkFoul = (num % 2 == 0);
-				g.setColor((IschkFoul) ? Color.BLACK : Color.WHITE);
-				g.fillOval(bx.get(num)+15, by.get(num)+15, 30, 30);
+		makeBoard(g);
+		for (int num = 0; num <coordx.size(); num++) {
+				isBlack = (num % 2 == 0);
+				g.setColor((isBlack) ? Color.BLACK : Color.WHITE);
+				g.fillOval(coordx.get(num)+15, coordy.get(num)+15, 30, 30);
 		}
 	}
 
-	public int[] IsReach(int[][] r) {
+	public int[][] makereachset(int[][] r) {
 		int vx = 0,vy = 0;
-		int k, count, bs, bf, l = 0, len;
+		int k, count, l = 0, len;
 		int tx, ty;
-		int[] search = new int[11];
+		int[][] search = new int[flag[0].length][11];
 		int sea = r[x][y];
-		final int SEALEN = (search.length+1)/2;
-		int[] reacharray = new int[4];
+		final int SEALEN = (search[0].length+1)/2;
 
 		if(sea > 0) {
 			for(k = 0; k < 4 ; k++){
@@ -206,64 +207,60 @@ public class root extends Frame {
 				vy = flag[1][k];
 				tx = x - SEALEN*vx;
 				ty = y - SEALEN*vy;
-				bs = SEALEN - 1;
-				for(count = 0 ;count < search.length; count++) search[count] = -1;
-				for(count = 0 ;count < bs; count++){
+				bs[k] = SEALEN - 1;
+				for(count = 0 ;count < search[k].length; count++) search[k][count] = -1;
+				for(count = 0 ;count < bs[k]; count++){
 					if((tx+vx)>0 && (tx+vx)<16 && (ty+vy)>0 && (ty+vy)<16) {
-						bs = count;
+						bs[k] = count;
 						break;
 					}
 					vx += flag[0][k];
 					vy += flag[1][k];
 				}
-				bf = search.length;
-				for(count = bs ;count < search.length; count++){
+				bf[k] = search[k].length;
+				for(count = bs[k] ;count < search[k].length; count++){
 					if((tx+vx)<=0||(tx+vx)>=16||(ty+vy)<=0||(ty+vy)>=16) {
-						bf = count;
+						bf[k] = count;
 						break;
 					}
-					search[count] = r[tx+vx][ty+vy];
+					search[k][count] = r[tx+vx][ty+vy];
 					vx += flag[0][k];
 					vy += flag[1][k];
 				}
-				reacharray[k] = IsLineReach(search, bs, bf);
-				for(count = 0;count < search.length; count++){
-					if(search[count] == sea) System.out.print("* ");
-					else if(search[count] > 0) System.out.print("- ");
-					else if(search[count] == 0) System.out.print("_ ");
+				for(count = 0;count < search[k].length; count++){
+					if(search[k][count] == sea) System.out.print("* ");
+					else if(search[k][count] > 0) System.out.print("- ");
+					else if(search[k][count] == 0) System.out.print("_ ");
 					else System.out.print("x ");
 				}
-				System.out.print(" : " + reacharray[k]);
 				System.out.print("\n");
 			}
 		}
-		return reacharray;
+		return search;
 	}
 
-		public int IsLineReach(int[] r,int s, int f){
-			int ss = r[(r.length - 1)/2];
-			int i, j, c = 1, m = 0;
-			int start = (s == 0) ? s+1 : s;
-			int fin = (f == r.length) ? f -1: f;
+		public int isReach(int[] r, int kk){
+			int ss = r[r.length/2];
+			int i, j, rn = 1, m = 0;
+			int start = (bs[kk] == 0) ? bs[kk] + 1 : bs[kk];
+			int fin = (bf[kk] == r.length) ? bf[kk] - 1: bf[kk];
 			System.out.print("start: " + start + " : fin : " + fin + "    ");
-			for(i = start; i < 6; i++) {
+			for(i = start; i < (r.length + 1)/2; i++) {
 				if(fin - start < 5) break;
 				else if(r[i] != ss) continue;
-				if(r[i+1] != 0 || r[i+3] != 0) {
-					for(j = i + 1; j < fin ;j++) {
-						if(r[j] == ss) {
-							c++;
-							m = j;
-						}
-						else if(r[j] > 0 || (r[j]==0 && r[j+1]==0)) break;
+				for(j = i + 1; j < fin ;j++) {
+					if(r[j] == ss) {
+						rn++;
+						m = j;
 					}
+						else if(r[j] > 0 || (r[j]==0 && r[j+1]==0) || (r[i+1] == 0 && r[i+3] != 0) ) break;
 				}
-				if (c >= 3) {
+				if (rn >= 3) {
 					if (r[i - 1] > 0 && r[m + 1] > 0 && r[i - 1] != ss && r[m + 1] != ss) {
 						i += (m - i);
 						continue;
 					}
-					else return c;
+					else return rn;
 				}
 			}
 			return 0;
