@@ -115,9 +115,7 @@ public class Root extends Frame {
 					System.out.println("CHEAT!\nWIN: WHITE");
 					break;
 				}
-				if(!win) {
-					win = (rnum >= 5);
-				}
+				if(!win) win = (rnum >= 5);
 			}
 			if(!isCheat && win) System.out.println("WIN: " + player);
 			for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
