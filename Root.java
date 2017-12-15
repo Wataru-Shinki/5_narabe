@@ -110,7 +110,7 @@ public class Root extends Frame {
 			for(int k = 0; k < flag[0].length; k++) {
 				int rnum = isReach(reachset[k], k);
 				if(x == 0) break;
-				isCheat = ischeat(rnum, isBlack);
+				if(isBlack) isCheat = ischeat(rnum);
 				if(isCheat) {
 					System.out.println("CHEAT!\nWIN: WHITE");
 					break;
@@ -128,22 +128,20 @@ public class Root extends Frame {
 
 		}
 
-		public boolean ischeat(int r, boolean Icf) {
+		public boolean ischeat(int r) {
 			int t;
-			if(Icf){
-				if(r == 3 || r == 4) {
-					t = (r == 3) ? 0 : 1;
-					if(isFirstcheatset[t]) {
-						isCheatset[t] = true;
-						for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
-						return true;
-					}
-					else isFirstcheatset[t] = true;
-				}
-				else if(r >= 6) {
-					isCheatset[2] = true;
+			if(r == 3 || r == 4) {
+				t = (r == 3) ? 0 : 1;
+				if(isFirstcheatset[t]) {
+					isCheatset[t] = true;
+					for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
 					return true;
 				}
+				else isFirstcheatset[t] = true;
+			}
+			else if(r >= 6) {
+				isCheatset[2] = true;
+				return true;
 			}
 			return false;
 		}
@@ -258,4 +256,3 @@ public class Root extends Frame {
 			return 0;
 		}
 }
-
