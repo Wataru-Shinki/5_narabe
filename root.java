@@ -91,7 +91,7 @@ public class Root extends Frame {
 		}
 
 		public void mousePressed(MouseEvent e){
-			int[][] Reachset= new int[flag[0].length][11];
+			int[][] reachset= new int[flag[0].length][11];
 			if(isCheat || win) {
 				makenewgame();
 				isCheat = false;
@@ -101,23 +101,22 @@ public class Root extends Frame {
 			}
 
 			check(e);
-			isBlack = (crr%2==0);
-			System.out.println("crr :" + crr);
+			isBlack = (crr%2==1);
+
 			String player = (isBlack) ? "BLACK" : "WHITE";
-			record[x][y] = (isBlack) ? 2 : 1;
+			record[x][y] = (isBlack) ? 1 : 2;
 			record[0][0] = -1;
-			Reachset = makereachset(record);
+			reachset = makereachset(record);
 			for(int k = 0; k < flag[0].length; k++) {
-				int Rnum = isReach(Reachset[k], k);
+				int rnum = isReach(reachset[k], k);
 				if(x == 0) break;
-				System.out.println("Rnum : "+Rnum);
-				isCheat = ischeat(Rnum, isBlack);
+				isCheat = ischeat(rnum, isBlack);
 				if(isCheat) {
 					System.out.println("CHEAT!\nWIN: WHITE");
 					break;
 				}
-				if(!isCheat && !win) {
-					win = Iswin(Rnum);
+				if(!win) {
+					win = (rnum >= 5);
 				}
 			}
 			if(!isCheat && win) System.out.println("WIN: " + player);
@@ -149,14 +148,8 @@ public class Root extends Frame {
 			return false;
 		}
 
-		public boolean Iswin(int r) {
-			if(r >= 5) return true;
-			return false;
-		}
-
 	 	public void mouseReleased(MouseEvent e){
 		}
-
 	}
 
 	public void check(MouseEvent e){
@@ -244,7 +237,6 @@ public class Root extends Frame {
 			int i, j, rn = 1, m = 0;
 			int start = (bs[kk] == 0) ? bs[kk] + 1 : bs[kk];
 			int fin = (bf[kk] == r.length) ? bf[kk] - 1: bf[kk];
-			System.out.print("start: " + start + " : fin : " + fin + "    ");
 			for(i = start; i < (r.length + 1)/2; i++) {
 				if(fin - start < 5) break;
 				else if(r[i] != ss) continue;
