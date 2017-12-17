@@ -124,28 +124,28 @@ public class Root extends Frame {
 			}
 
 		}
-
-		public boolean ischeat(int r) {
-			int t;
-			if(r == 3 || r == 4) {
-				t = (r == 3) ? 0 : 1;
-				if(isFirstcheatset[t]) {
-					isCheatset[t] = true;
-					for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
-					return true;
-				}
-				else isFirstcheatset[t] = true;
-			}
-			else if(r >= 6) {
-				isCheatset[2] = true;
-				return true;
-			}
-			return false;
-		}
-
 	 	public void mouseReleased(MouseEvent e){
 		}
 	}
+
+	public boolean ischeat(int r) {
+		int t;
+		if(r == 3 || r == 4) {
+			t = (r == 3) ? 0 : 1;
+			if(isFirstcheatset[t]) {
+				isCheatset[t] = true;
+				for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
+				return true;
+			}
+			else isFirstcheatset[t] = true;
+		}
+		else if(r >= 6) {
+			isCheatset[2] = true;
+			return true;
+		}
+		return false;
+	}
+
 
 	public void check(MouseEvent e){
 		x = (e.getX()-15)/30;
