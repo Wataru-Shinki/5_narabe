@@ -11,7 +11,7 @@ public class Root extends Frame {
 	ArrayList<Integer> coordx = new ArrayList<Integer>();
 	ArrayList<Integer> coordy = new ArrayList<Integer>();
 	int[][] record = new int[17][17];
-	boolean isBlack, isCheat, win;
+	boolean isBlack;
 	boolean[] isCheatset = {false,false,false};
 	boolean[] isFirstcheatset = {false,false};
 	static int[][] flag = new int[2][4];
@@ -77,9 +77,7 @@ public class Root extends Frame {
       		}
 	}
 
-
 		/*MouseListener*/
-
 	class MAdapter extends MouseAdapter {
 		public void mouseClicked(MouseEvent e){
 		}
@@ -92,6 +90,7 @@ public class Root extends Frame {
 
 		public void mousePressed(MouseEvent e){
 			int[][] reachset= new int[flag[0].length][11];
+			boolean isCheat = false, win = false;
 			if(isCheat || win) {
 				makenewgame();
 				isCheat = false;
@@ -176,9 +175,9 @@ public class Root extends Frame {
 	public void paint(Graphics g) {
 		makeBoard(g);
 		for (int num = 0; num <coordx.size(); num++) {
-				isBlack = (num % 2 == 0);
-				g.setColor((isBlack) ? Color.BLACK : Color.WHITE);
-				g.fillOval(coordx.get(num)+15, coordy.get(num)+15, 30, 30);
+			boolean isBk = (num%2 == 0);
+			g.setColor((isBk) ? Color.BLACK : Color.WHITE);
+			g.fillOval(coordx.get(num)+15, coordy.get(num)+15, 30, 30);
 		}
 	}
 
