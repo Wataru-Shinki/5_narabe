@@ -26,9 +26,13 @@ public class Root extends Frame {
 	public Root(){
 		super();
 		for(int k = 0;k < flag[0].length; k++) {
-			flag[0][k] = (int)(1.8 * Math.cos(Math.toRadians(DEG * k)));
-			flag[1][k] = (int)(1.8 * Math.sin(Math.toRadians(DEG * k)));
-		}
+      double tmp = Math.cos(Math.toRadians(DEG * k));
+      flag[0][k] = (k == 2) ? 0 : (int)(tmp/Math.abs(tmp));
+			System.out.println(flag[0][k]);
+      tmp = Math.sin(Math.toRadians(DEG * k));
+      flag[1][k] = (k == 0) ? (int)tmp : (int)(tmp/Math.abs(tmp));
+			System.out.println(flag[1][k]);
+    }
 		for (int i = 0;i < 17; i++) {
 			record[0][i] = -1;
 			record[16][i] = -1;
