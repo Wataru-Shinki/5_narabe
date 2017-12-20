@@ -11,6 +11,7 @@ public class Root extends Frame {
 	ArrayList<Integer> coordx = new ArrayList<Integer>();
 	ArrayList<Integer> coordy = new ArrayList<Integer>();
 	int[][] record = new int[17][17];
+	boolean isCheat = false, win = false;
 	boolean isBlack;
 	boolean[] isCheatset = {false,false,false};
 	boolean[] isFirstcheatset = {false,false};
@@ -25,13 +26,12 @@ public class Root extends Frame {
 
 	public Root(){
 		super();
+		System.out.println("1 :BLACK, 2 :WHITE");
 		for(int k = 0;k < flag[0].length; k++) {
       double tmp = Math.cos(Math.toRadians(DEG * k));
       flag[0][k] = (k == 2) ? 0 : (int)(tmp/Math.abs(tmp));
-			System.out.println(flag[0][k]);
       tmp = Math.sin(Math.toRadians(DEG * k));
       flag[1][k] = (k == 0) ? (int)tmp : (int)(tmp/Math.abs(tmp));
-			System.out.println(flag[1][k]);
     }
 		for (int i = 0;i < 17; i++) {
 			record[0][i] = -1;
@@ -94,7 +94,6 @@ public class Root extends Frame {
 
 		public void mousePressed(MouseEvent e){
 			int[][] reachset= new int[flag[0].length][11];
-			boolean isCheat = false, win = false;
 			if(isCheat || win) {
 				makenewgame();
 				isCheat = false;
@@ -122,8 +121,21 @@ public class Root extends Frame {
 			}
 			if(!isCheat && win) System.out.println("WIN: " + player);
 			for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
-			for(int i = 0; i < 17 ; i++) {
-				for (int j = 0; j < 17; j++) System.out.print(record[j][i]);
+			System.out.print("   ");
+			for(int j = 1; j < 16; j++){
+				if(j < 10) System.out.print("0"+j+" ");
+				else System.out.print(j+" ");
+			}
+			System.out.println("   ");
+			for(int i = 1; i < 17 ; i++) {
+				if(i < 10) System.out.print("0"+i+" ");
+				else if(i < 16) System.out.print(i+" ");
+				else System.out.print("   ");
+				for (int j = 1; j < 17; j++) {
+					if(record[j][i] >= 0) System.out.print(" "+ record[j][i] + " ");
+					else if(j ==16 && i == 16) System.out.print("   ");
+					else System.out.print(" * ");
+				}
 				System.out.print("\n");
 			}
 
@@ -219,6 +231,7 @@ public class Root extends Frame {
 					vx += flag[0][k];
 					vy += flag[1][k];
 				}
+				/*
 				for(count = 0;count < search[k].length; count++){
 					if(search[k][count] == sea) System.out.print("* ");
 					else if(search[k][count] > 0) System.out.print("- ");
@@ -226,6 +239,7 @@ public class Root extends Frame {
 					else System.out.print("x ");
 				}
 				System.out.print("\n");
+				*/
 			}
 		}
 		return search;
