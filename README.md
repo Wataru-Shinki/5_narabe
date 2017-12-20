@@ -5,4 +5,4 @@ It was written in java.
 December 08, 2017 : First Contribution.  
 December 15, 2017 : Fix Bug.  
 December 18, 2017 : Modify MAdapter class.
-December 21, 2017 : Improve how to display game record in console screen.
+December 21, 2017 : Improve how to display game record in console screen. Divide the source into 3 files.  
