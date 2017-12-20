@@ -11,7 +11,7 @@ public class Root extends Frame {
 	ArrayList<Integer> coordx = new ArrayList<Integer>();
 	ArrayList<Integer> coordy = new ArrayList<Integer>();
 	int[][] record = new int[17][17];
-	boolean isBlack, isCheat, win;
+	boolean isBlack;
 	boolean[] isCheatset = {false,false,false};
 	boolean[] isFirstcheatset = {false,false};
 	static int[][] flag = new int[2][4];
@@ -26,12 +26,8 @@ public class Root extends Frame {
 	public Root(){
 		super();
 		for(int k = 0;k < flag[0].length; k++) {
-			double tmp = Math.cos(Math.toRadians(DEG * k));
-			flag[0][k] = (tmp == 0.0) ? (int) tmp : (int)(tmp/Math.abs(tmp));
-			System.out.println("cos" + 45*k + "=" +flag[0][k]);
-			tmp = Math.sin(Math.toRadians(DEG * k));
-			flag[1][k] = (tmp == 0.0) ? (int) tmp : (int)(tmp/Math.abs(tmp));
-			System.out.println("sin" + 45*k + "=" +flag[1][k]);
+			flag[0][k] = (int)(1.8 * Math.cos(Math.toRadians(DEG * k)));
+			flag[1][k] = (int)(1.8 * Math.sin(Math.toRadians(DEG * k)));
 		}
 		for (int i = 0;i < 17; i++) {
 			record[0][i] = -1;
@@ -81,9 +77,7 @@ public class Root extends Frame {
       		}
 	}
 
-
 		/*MouseListener*/
-
 	class MAdapter extends MouseAdapter {
 		public void mouseClicked(MouseEvent e){
 		}
@@ -96,6 +90,7 @@ public class Root extends Frame {
 
 		public void mousePressed(MouseEvent e){
 			int[][] reachset= new int[flag[0].length][11];
+			boolean isCheat = false, win = false;
 			if(isCheat || win) {
 				makenewgame();
 				isCheat = false;
@@ -114,14 +109,12 @@ public class Root extends Frame {
 			for(int k = 0; k < flag[0].length; k++) {
 				int rnum = isReach(reachset[k], k);
 				if(x == 0) break;
-				isCheat = ischeat(rnum, isBlack);
+				if(isBlack) isCheat = ischeat(rnum);
 				if(isCheat) {
 					System.out.println("CHEAT!\nWIN: WHITE");
 					break;
 				}
-				if(!win) {
-					win = (rnum >= 5);
-				}
+				if(!win) win = (rnum >= 5);
 			}
 			if(!isCheat && win) System.out.println("WIN: " + player);
 			for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
@@ -131,30 +124,28 @@ public class Root extends Frame {
 			}
 
 		}
-
-		public boolean ischeat(int r, boolean Icf) {
-			int t;
-			if(Icf){
-				if(r == 3 || r == 4) {
-					t = (r == 3) ? 0 : 1;
-					if(isFirstcheatset[t]) {
-						isCheatset[t] = true;
-						for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
-						return true;
-					}
-					else isFirstcheatset[t] = true;
-				}
-				else if(r >= 6) {
-					isCheatset[2] = true;
-					return true;
-				}
-			}
-			return false;
-		}
-
 	 	public void mouseReleased(MouseEvent e){
 		}
 	}
+
+	public boolean ischeat(int r) {
+		int t;
+		if(r == 3 || r == 4) {
+			t = (r == 3) ? 0 : 1;
+			if(isFirstcheatset[t]) {
+				isCheatset[t] = true;
+				for(int i = 0; i < 2; i++) isFirstcheatset[i] = false;
+				return true;
+			}
+			else isFirstcheatset[t] = true;
+		}
+		else if(r >= 6) {
+			isCheatset[2] = true;
+			return true;
+		}
+		return false;
+	}
+
 
 	public void check(MouseEvent e){
 		x = (e.getX()-15)/30;
@@ -184,9 +175,9 @@ public class Root extends Frame {
 	public void paint(Graphics g) {
 		makeBoard(g);
 		for (int num = 0; num <coordx.size(); num++) {
-				isBlack = (num % 2 == 0);
-				g.setColor((isBlack) ? Color.BLACK : Color.WHITE);
-				g.fillOval(coordx.get(num)+15, coordy.get(num)+15, 30, 30);
+			boolean isBk = (num%2 == 0);
+			g.setColor((isBk) ? Color.BLACK : Color.WHITE);
+			g.fillOval(coordx.get(num)+15, coordy.get(num)+15, 30, 30);
 		}
 	}
 
