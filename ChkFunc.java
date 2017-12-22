@@ -7,7 +7,7 @@ class ChkFunc{
   static boolean[] isCheatset = {false,false,false};
   static boolean[] isFirstcheatset = {false,false};
 
-  public static void check(MouseEvent e){
+  public void check(MouseEvent e){
 		Root.x = (e.getX()-15)/30;
 		Root.y = (e.getY()-15)/30;
 		if (Root.crr==0) {
@@ -31,7 +31,7 @@ class ChkFunc{
 		}
 	}
 
-  public static boolean ischeat(int r) {
+  public static boolean isCheat(int r) {
     int t;
     if(r == 3 || r == 4) {
       t = (r == 3) ? 0 : 1;

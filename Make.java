@@ -34,7 +34,7 @@ class Make{
       g.drawLine(lcnt, 60, lcnt, 480);
     }
   }
-  public static int[][] makereachset(int[][] r) {
+  public int[][] makereachset(int[][] r) {
 		int vx = 0,vy = 0;
 		int k, count, l = 0, len;
 		int tx, ty;
@@ -81,5 +81,26 @@ class Make{
 		}
 		return search;
 	}
+
+  public void kifu() {
+    System.out.print("   ");
+    for(int j = 1; j < 16; j++){
+      if(j < 10) System.out.print("0"+j+" ");
+      else System.out.print(j+" ");
+    }
+    System.out.println("   ");
+    for(int i = 1; i < 17 ; i++) {
+      if(i < 10) System.out.print("0"+i+" ");
+      else if(i < 16) System.out.print(i+" ");
+      else System.out.print("   ");
+      for (int j = 1; j < 17; j++) {
+        if(Root.record[j][i] >= 0) System.out.print(" "+ Root.record[j][i] + " ");
+        else if(j ==16 && i == 16) System.out.print("   ");
+        else System.out.print(" * ");
+      }
+      System.out.print("\n");
+    }
+
+  }
 
 }

@@ -64,23 +64,25 @@ public class Root extends Frame {
 
 		public void mousePressed(MouseEvent e){
 			int[][] reachset= new int[flag[0].length][11];
+			Make m = new Make();
+			ChkFunc c = new ChkFunc();
 			if(isCheat || win) {
 				Make.makenewgame();
 				System.out.println("\nNEW GAME.\n");
 			}
 
-			ChkFunc.check(e);
+			c.check(e);
 			if(x != 0) repaint();
 			isBlack = (crr%2==1);
 
 			String player = (isBlack) ? "BLACK" : "WHITE";
 			record[x][y] = (isBlack) ? 1 : 2;
 			record[0][0] = -1;
-			reachset = Make.makereachset(record);
+			reachset = m.makereachset(record);
 			for(int k = 0; k < flag[0].length; k++) {
 				int rnum = ChkFunc.isReach(reachset[k], k);
 				if(x == 0) break;
-				if(isBlack) isCheat = ChkFunc.ischeat(rnum);
+				if(isBlack) isCheat = ChkFunc.isCheat(rnum);
 				if(isCheat) {
 					System.out.println("CHEAT!\nWIN: WHITE");
 					break;
@@ -88,26 +90,11 @@ public class Root extends Frame {
 				if(!win) win = (rnum >= 5);
 			}
 			if(!isCheat && win) System.out.println("WIN: " + player);
+			if(isCheat && win) System.out.println("Press the screen to play new game.")
 			for(int i = 0; i < 2; i++) ChkFunc.isFirstcheatset[i] = false;
-			System.out.print("   ");
-			for(int j = 1; j < 16; j++){
-				if(j < 10) System.out.print("0"+j+" ");
-				else System.out.print(j+" ");
-			}
-			System.out.println("   ");
-			for(int i = 1; i < 17 ; i++) {
-				if(i < 10) System.out.print("0"+i+" ");
-				else if(i < 16) System.out.print(i+" ");
-				else System.out.print("   ");
-				for (int j = 1; j < 17; j++) {
-					if(record[j][i] >= 0) System.out.print(" "+ record[j][i] + " ");
-					else if(j ==16 && i == 16) System.out.print("   ");
-					else System.out.print(" * ");
-				}
-				System.out.print("\n");
-			}
-
+			m.kifu();
 		}
+
 	 	public void mouseReleased(MouseEvent e){
 		}
 	}
