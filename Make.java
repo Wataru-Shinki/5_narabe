@@ -21,17 +21,20 @@ class Make{
   }
 
   public static void makeBoard(Graphics g) {
-    final int CENTER = 270, T = 120;
+    final int POINT_11X = 60;
+    final int POINT_11Y = 60;
     final int ISHI_SIZE = 30;
+    final int CENTER_X = POINT_11X+ISHI_SIZE*7;
+    final int CENTER_Y = POINT_11Y+ISHI_SIZE*7;
     g.setColor(Color.BLACK);
-    g.fillOval(CENTER - 3*ISHI_SIZE -3, CENTER - 3*ISHI_SIZE -3, 6, 6);
-    g.fillOval(CENTER - 3*ISHI_SIZE -3, CENTER + 3*ISHI_SIZE -3, 6, 6);
-    g.fillOval(CENTER + 3*ISHI_SIZE -3, CENTER - 3*ISHI_SIZE -3, 6, 6);
-    g.fillOval(CENTER + 3*ISHI_SIZE -3, CENTER + 3*ISHI_SIZE -3, 6, 6);
-    g.fillOval(CENTER -3, CENTER -3, 6, 6);
-    for (int lcnt = 60; lcnt <= 480; lcnt += 30) {
-      g.drawLine(60, lcnt, 480, lcnt);
-      g.drawLine(lcnt, 60, lcnt, 480);
+    g.fillOval(CENTER_X - 3*ISHI_SIZE -3, CENTER_Y - 3*ISHI_SIZE -3, 6, 6);
+    g.fillOval(CENTER_X - 3*ISHI_SIZE -3, CENTER_Y + 3*ISHI_SIZE -3, 6, 6);
+    g.fillOval(CENTER_X + 3*ISHI_SIZE -3, CENTER_Y - 3*ISHI_SIZE -3, 6, 6);
+    g.fillOval(CENTER_X + 3*ISHI_SIZE -3, CENTER_Y + 3*ISHI_SIZE -3, 6, 6);
+    g.fillOval(CENTER_X -3, CENTER_Y -3, 6, 6);
+    for (int lcnt = 1; lcnt <= 15; lcnt++) {
+      g.drawLine(POINT_11X, POINT_11Y+(lcnt-1)*ISHI_SIZE, 15*ISHI_SIZE, POINT_11Y+(lcnt-1)*ISHI_SIZE);
+      g.drawLine(POINT_11X+(lcnt-1)+ISHI_SIZE, POINT_11Y, POINT_11X+(lcnt-1)*ISHI_SIZE, 15*ISHI_SIZE);
     }
   }
   public int[][] makereachset(int[][] r) {

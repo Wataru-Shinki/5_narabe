@@ -90,7 +90,7 @@ public class Root extends Frame {
 				if(!win) win = (rnum >= 5);
 			}
 			if(!isCheat && win) System.out.println("WIN: " + player);
-			if(isCheat && win) System.out.println("Press the screen to play new game.")
+			if(isCheat || win) System.out.println("Press the screen to play new game.");
 			for(int i = 0; i < 2; i++) ChkFunc.isFirstcheatset[i] = false;
 			m.kifu();
 		}
