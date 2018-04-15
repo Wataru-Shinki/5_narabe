@@ -27,6 +27,7 @@ class ChkFunc{
 		if(Root.x != 0) {
 			Root.coordx.add(Root.x * 30);
 			Root.coordy.add(Root.y * 30);
+      System.out.println("("+Root.x+","+Root.y+")");
 			Root.crr++;
 		}
 	}

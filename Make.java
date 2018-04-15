@@ -33,8 +33,8 @@ class Make{
     g.fillOval(CENTER_X + 3*ISHI_SIZE -3, CENTER_Y + 3*ISHI_SIZE -3, 6, 6);
     g.fillOval(CENTER_X -3, CENTER_Y -3, 6, 6);
     for (int lcnt = 1; lcnt <= 15; lcnt++) {
-      g.drawLine(POINT_11X, POINT_11Y+(lcnt-1)*ISHI_SIZE, 15*ISHI_SIZE, POINT_11Y+(lcnt-1)*ISHI_SIZE);
-      g.drawLine(POINT_11X+(lcnt-1)+ISHI_SIZE, POINT_11Y, POINT_11X+(lcnt-1)*ISHI_SIZE, 15*ISHI_SIZE);
+      g.drawLine(POINT_11X, POINT_11Y+(lcnt-1)*ISHI_SIZE, POINT_11X+14*ISHI_SIZE, POINT_11Y+(lcnt-1)*ISHI_SIZE);
+      g.drawLine(POINT_11X+(lcnt-1)*ISHI_SIZE, POINT_11Y, POINT_11X+(lcnt-1)*ISHI_SIZE, POINT_11Y+14*ISHI_SIZE);
     }
   }
   public int[][] makereachset(int[][] r) {
